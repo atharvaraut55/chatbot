@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chatbot</title>
+    <style>
+        body {
+            background-color: rgb(150, 40, 40);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        #glassBot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: Arial, sans-serif;
+            z-index: 99999;
+        }
+
+        #glassBot-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 22px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #glassBot-box {
+            display: none;
+            width: 360px;
+            height: 470px;
+            border-radius: 18px;
+            background: rgba(20, 20, 20, 0.55);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        #glassBot-head {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        #glassBot-head b {
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        #glassBot-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .glassBot-tab {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+            user-select: none;
+            opacity: 0.8;
+        }
+
+        .glassBot-active {
+            background: rgba(255, 255, 255, 0.13);
+            border-bottom: 2px solid rgba(13, 110, 253, 0.9);
+            opacity: 1;
+        }
+
+        #glassBot-faq,
+        #glassBot-chat {
+            height: 320px;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .glassBot-faq-item {
+            padding: 11px 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: 0.2s;
+        }
+
+        .glassBot-faq-item:hover {
+            background: rgba(255, 255, 255, 0.13);
+        }
+
+        .glassBot-msg {
+            padding: 10px;
+            border-radius: 14px;
+            margin: 8px 0;
+            width: fit-content;
+            max-width: 78%;
+            font-size: 14px;
+            animation: pop .15s ease-in;
+            word-wrap: break-word;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(.95);
+                opacity: .6;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .glassBot-user {
+            margin-left: auto;
+            background: rgba(13, 110, 253, 0.75);
+        }
+
+        .glassBot-bot {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        #glassBot-typing {
+            padding: 6px 12px;
+            font-size: 12px;
+            opacity: 0.8;
+            display: none;
+        }
+
+        #glassBot-input {
+            display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        #glassBot-input input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: white;
+            font-size: 14px;
+        }
+
+        #glassBot-input input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #glassBot-input button {
+            border: none;
+            padding: 0 14px;
+            cursor: pointer;
+            background: rgba(13, 110, 253, 0.85);
+            color: white;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div><img src="./Nature_celebrating_India.png" alt=""></div> -->
+    <div id="glassBot">
+        <div id="glassBot-box">
+            <div id="glassBot-head">
+                <b>Support Assistant</b>
+                <div style="display:flex;gap:12px;align-items:center;">
+                    <span id="glassBot-clear" style="cursor:pointer;font-size:13px;opacity:0.85;">🗑 Clear</span>
+                    <span id="glassBot-close" style="cursor:pointer;font-size:18px;">✖</span>
+                </div>
+            </div>
+            <div id="glassBot-tabs">
+                <div class="glassBot-tab glassBot-active" id="glassTabFAQ">FAQ</div>
+                <div class="glassBot-tab" id="glassTabCHAT">Chat</div>
+            </div>
+            <div id="glassBot-faq">
+                <div class="glassBot-faq-item">📌 What is SPPU Research Park Foundation (RPF)?</div>
+                <div class="glassBot-faq-item">💳 What is RPF Incubation?</div>
+                <div class="glassBot-faq-item">🕒 Do RPF provide Funds?</div>
+                <div class="glassBot-faq-item">📞 Where is RPF located?</div>
+                <div class="glassBot-faq-item">📦 Applaction Process for StartUps?</div>
+            </div>
+            <div id="glassBot-chat" style="display:none;"></div>
+            <div id="glassBot-typing">Bot is typing...</div>
+            <div id="glassBot-input" style="display:none;">
+                <input id="glassBot-text" placeholder="Type your message..." />
+                <button id="glassBot-send">➤</button>
+            </div>
+        </div>
+        <button id="glassBot-btn">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        const btn = document.getElementById("glassBot-btn");
+        const box = document.getElementById("glassBot-box");
+        const closeBtn = document.getElementById("glassBot-close");
+        const clearBtn = document.getElementById("glassBot-clear");
+        const tabFAQ = document.getElementById("glassTabFAQ");
+        const tabCHAT = document.getElementById("glassTabCHAT");
+        const faqSection = document.getElementById("glassBot-faq");
+        const chatSection = document.getElementById("glassBot-chat");
+        const inputWrap = document.getElementById("glassBot-input");
+        const inputText = document.getElementById("glassBot-text");
+        const sendBtn = document.getElementById("glassBot-send");
+        const typing = document.getElementById("glassBot-typing");
+
+        let questionCount = 0;
+        const FORM_TRIGGER_COUNT = 3;
+        const USER_PROFILE_KEY = "chat_user_profile";
+        const CHAT_HISTORY_KEY = "chat_history_data";
+        let greeted = false;
+
+        function getUserProfile() { return JSON.parse(localStorage.getItem(USER_PROFILE_KEY)); }
+        function setUserProfile(profile) { localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile)); }
+        function getChatHistory() { return JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY)) || []; }
+        function saveChatHistory(history) { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history)); }
+
+        function addMsg(text, type = "bot", store = true) {
+            const div = document.createElement("div");
+            div.className = "glassBot-msg " + (type === "user" ? "glassBot-user" : "glassBot-bot");
+            div.textContent = text;
+            chatSection.appendChild(div);
+            chatSection.scrollTop = chatSection.scrollHeight;
+            if (store) {
+                const history = getChatHistory();
+                history.push({ type: type, text: text, time: new Date().toISOString() });
+                saveChatHistory(history);
+            }
+        }
+
+        function addHTMLMsg(html, type = "bot") {
+            const div = document.createElement("div");
+            div.className = "glassBot-msg " + (type === "user" ? "glassBot-user" : "glassBot-bot");
+            div.innerHTML = html;
+            chatSection.appendChild(div);
+            chatSection.scrollTop = chatSection.scrollHeight;
+        }
+
+        function loadChatHistory() {
+            chatSection.innerHTML = "";
+            const history = getChatHistory();
+            history.forEach(msg => { addMsg(msg.text, msg.type, false); });
+        }
+
+        function getSessionId() {
+            let sessionId = localStorage.getItem("chatbot_session_id");
+            if (!sessionId) {
+                sessionId = "sess_" + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem("chatbot_session_id", sessionId);
+            }
+            return sessionId;
+        }
+
+        async function sendToBackend(message) {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/chat', {  // 🔁 FIXED
+                    method: 'POST' | 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: getSessionId()
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Server error " + response.status);
+                }
+
+                const data = await response.json();
+                return data.response || "No response from bot.";
+            } catch (error) {
+                console.error("Chat error:", error);
+                return "⚠️ Cannot connect to assistant server.";
+            }
+        }
+
+
+        function openFAQ() {
+            tabFAQ.classList.add("glassBot-active");
+            tabCHAT.classList.remove("glassBot-active");
+            faqSection.style.display = "block";
+            chatSection.style.display = "none";
+            inputWrap.style.display = "none";
+        }
+
+        function openChat() {
+            tabCHAT.classList.add("glassBot-active");
+            tabFAQ.classList.remove("glassBot-active");
+            faqSection.style.display = "none";
+            chatSection.style.display = "block";
+            inputWrap.style.display = "flex";
+            loadChatHistory();
+            const history = getChatHistory();
+            if (!greeted && history.length === 0) {
+                const profile = getUserProfile();
+                if (profile?.name) {
+                    addMsg(`👋 Hello ${profile.name}! Welcome back 😄`);
+                    addMsg("How can I help you today?");
+                } else {
+                    addMsg("👋 Hello! Ask me anything or select from FAQ.");
+                }
+                greeted = true;
+            }
+        }
+
+        function showUserInfoForm() {
+            const profile = getUserProfile();
+            if (profile?.name) return;
+            const formHTML = `<div style="padding:10px;">
+                <div style="font-size:13px;margin-bottom:8px;">😊 To help you better, please share your info:</div>
+                <input id="userNameInput" placeholder="Your Name" style="width:100%;padding:9px;border-radius:10px;border:none;margin-bottom:8px;outline:none;" />
+                <input id="userQualInput" placeholder="Qualification" style="width:100%;padding:9px;border-radius:10px;border:none;margin-bottom:10px;outline:none;" />
+                <button id="saveUserBtn" style="width:100%;padding:10px;border:none;border-radius:10px;background:#0d6efd;color:white;cursor:pointer;font-weight:bold;">Save Info</button>
+            </div>`;
+            addHTMLMsg(formHTML, "bot");
+            setTimeout(() => {
+                const saveBtn = document.getElementById("saveUserBtn");
+                if (!saveBtn) return;
+                saveBtn.onclick = () => {
+                    const name = document.getElementById("userNameInput").value.trim();
+                    const qual = document.getElementById("userQualInput").value.trim();
+                    if (!name || !qual) { alert("Please fill both fields"); return; }
+                    setUserProfile({ name: name, qualification: qual, savedAt: new Date().toISOString() });
+                    addMsg(`✅ Thanks ${name}! I've saved your info.`, "bot");
+                    addMsg(`🎓 Qualification: ${qual}`, "bot");
+                    addMsg("Now you can continue chatting 😄", "bot");
+                };
+            }, 200);
+        }
+
+        async function handleSend(text) {
+            if (!text.trim()) return;
+            document.getElementById("suggestionBox")?.remove();
+            openChat();
+            addMsg(text, "user");
+            inputText.value = "";
+            questionCount++;
+            typing.style.display = "block";
+            const reply = await sendToBackend(text);
+            const delay = Math.floor(Math.random() * 800) + 700;
+            setTimeout(() => {
+                typing.style.display = "none";
+                addMsg(makeHuman(reply), "bot");
+            }, delay);
+            if (questionCount === FORM_TRIGGER_COUNT) { showUserInfoForm(); }
+        }
+
+        function makeHuman(text) {
+            let t = text.trim();
+            if (t.length > 180) { t = t.slice(0, 180) + "..."; }
+            const emojis = ["🙂", "😄", "✨", "👍", "✅"];
+            if (Math.random() > 0.6) { t += " " + emojis[Math.floor(Math.random() * emojis.length)]; }
+            return t;
+        }
+
+        function showClearConfirmPopup() {
+            const popupHTML = `<div style="padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,0.18); background:rgba(0,0,0,0.25);">
+                <div style="font-size:13px;margin-bottom:10px;">⚠ Are you sure you want to clear?</div>
+                <button id="clearChatOnlyBtn" style="width:100%;padding:9px;margin-bottom:8px;border:none;border-radius:10px;background:#0d6efd;color:white;cursor:pointer;font-weight:bold;">🗑 Clear Chat Only (Keep Profile)</button>
+                <button id="clearAllBtn" style="width:100%;padding:9px;border:none;border-radius:10px;background:#dc3545;color:white;cursor:pointer;font-weight:bold;">❌ Clear Everything (Chat + Profile)</button>
+                <div style="margin-top:10px;text-align:center;"><span id="cancelClearBtn" style="cursor:pointer;font-size:12px;opacity:0.85;">Cancel</span></div>
+            </div>`;
+            openChat();
+            addHTMLMsg(popupHTML, "bot");
+            setTimeout(() => {
+                const clearChatOnlyBtn = document.getElementById("clearChatOnlyBtn");
+                const clearAllBtn = document.getElementById("clearAllBtn");
+                const cancelBtn = document.getElementById("cancelClearBtn");
+                if (clearChatOnlyBtn) clearChatOnlyBtn.onclick = clearChatOnly;
+                if (clearAllBtn) clearAllBtn.onclick = clearEverything;
+                if (cancelBtn) cancelBtn.onclick = () => addMsg("✅ Cancelled clearing.", "bot");
+            }, 100);
+        }
+
+        function clearChatOnly() {
+            localStorage.removeItem(CHAT_HISTORY_KEY);
+            chatSection.innerHTML = "";
+            questionCount = 0;
+            greeted = false;
+            const profile = getUserProfile();
+            if (profile?.name) {
+                addMsg(`🗑 Chat cleared! Hello ${profile.name} 😄`, "bot");
+                addMsg("Profile is still saved ✅", "bot");
+            } else { addMsg("🗑 Chat cleared! 👋 Hello! Ask me anything.", "bot"); }
+        }
+
+        function clearEverything() {
+            localStorage.removeItem(CHAT_HISTORY_KEY);
+            localStorage.removeItem(USER_PROFILE_KEY);
+            chatSection.innerHTML = "";
+            questionCount = 0;
+            greeted = false;
+            addMsg("❌ Cleared everything (Chat + Profile).", "bot");
+            addMsg("👋 Hello! Please start again 😄", "bot");
+        }
+
+        btn.onclick = () => { box.style.display = (box.style.display === "block") ? "none" : "block"; openFAQ(); };
+        closeBtn.onclick = () => box.style.display = "none";
+        clearBtn.onclick = showClearConfirmPopup;
+        tabFAQ.onclick = openFAQ;
+        tabCHAT.onclick = openChat;
+        document.querySelectorAll(".glassBot-faq-item").forEach(item => {
+            item.addEventListener("click", () => { handleSend(item.textContent); });
+        });
+        sendBtn.onclick = () => handleSend(inputText.value);
+        inputText.addEventListener("keypress", (e) => { if (e.key === "Enter") handleSend(inputText.value); });
+
+        function showSuggestions() {
+            if (document.getElementById("suggestionBox")) return;
+            const suggestionHTML = `<div id="suggestionBox" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+                <div style="width:100%;font-size:12px;opacity:0.85;margin-bottom:5px;">✨ Want me to show packages too?</div>
+                <button id="suggestYes" style="padding:7px 12px; border:none; border-radius:12px; cursor:pointer; background:rgba(13,110,253,0.85); color:white; font-size:12px;">✅ Yes</button>
+                <button id="suggestNo" style="padding:7px 12px; border:none; border-radius:12px; cursor:pointer; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.18); color:white; font-size:12px;">❌ No</button>
+            </div>`;
+            addHTMLMsg(suggestionHTML, "bot");
+            setTimeout(() => {
+                const yesBtn = document.getElementById("suggestYes");
+                const noBtn = document.getElementById("suggestNo");
+                if (yesBtn) yesBtn.onclick = () => { document.getElementById("suggestionBox")?.remove(); handleSend("Show packages"); };
+                if (noBtn) noBtn.onclick = () => { document.getElementById("suggestionBox")?.remove(); addMsg("Okay 😄 Tell me what you need next.", "bot"); };
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
