@@ -6,19 +6,26 @@ from response import get_bot_response, get_bot_response_new
 
 
 app = Flask(__name__)
+# # MongoDB connection
+# client = MongoClient("mongodb://mongo:GpvYjsnClfoJmzMDbfVGKQpDHxIcsGrN@ballast.proxy.rlwy.net:41954")
+# # Database connection
+# db = client["chatbot_db"]
+# # Chats store collection
+# chats = db["chats"]
+# # Answers collection
+# answers = db["answers"]
 
-# MongoDB connection
-client = MongoClient("mongodb://mongo:GpvYjsnClfoJmzMDbfVGKQpDHxIcsGrN@ballast.proxy.rlwy.net:41954")
+client = MongoClient(os.environ.get("MONGO_URI"), serverSelectionTimeoutMS=5000)
 
-# Database connection
-db = client["chatbot_db"]
+try:
+    client.server_info()
+    print("✅ MongoDB Connected Successfully")
+except Exception as e:
+    print("❌ MongoDB Connection Failed:", e)
 
-# Chats store collection
-chats = db["chats"]
-
-# Answers collection
-answers = db["answers"]
-
+db = client[os.environ.get("CHAT_DATABASE", "chatbot_db")]
+chats = db[os.environ.get("CHAT_COLLECTION", "chats")]
+answers = db[os.environ.get("ANS_CHAT_COLLECTION", "answers")]
 
 
 #---------------------------------------------------------------
