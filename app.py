@@ -85,7 +85,7 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_msg = request.json['message']
-    bot_response = get_bot_response_new(user_msg)  # Define this function
+    bot_response = get_bot_response(user_msg)  # Define this function
     chat_doc = {"user": user_msg, "bot": bot_response, "timestamp": datetime.utcnow()}
     chats.insert_one(chat_doc)
     return jsonify({'response': bot_response})
