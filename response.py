@@ -3,9 +3,25 @@ from rapidfuzz import process, fuzz
 
 
 # Setup connection
-client = MongoClient("mongodb://localhost:27017/")
-db = client['chatbot_db']
-collection = db['answers']
+# client = MongoClient("mongodb://localhost:27017/")
+# db = client['chatbot_db']
+# collection = db['answers']
+
+# --------------------------------------------------------
+#   MongoDb Connection
+# --------------------------------------------------------
+client = MongoClient(os.environ.get("MONGO_URI"), serverSelectionTimeoutMS=5000)
+
+try:
+    client.server_info()
+    print("✅ MongoDB Connected Successfully")
+except Exception as e:
+    print("❌ MongoDB Connection Failed:", e)
+
+db = client[os.environ.get("CHAT_DATABASE", "chatbot_db")]
+chats = db[os.environ.get("CHAT_COLLECTION", "chats")]
+answers = db[os.environ.get("ANS_CHAT_COLLECTION", "answers")]
+
 
 
     
