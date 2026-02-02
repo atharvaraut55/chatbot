@@ -20,8 +20,7 @@ except Exception as e:
     print("❌ MongoDB Connection Failed:", e)
 
 db = client[os.environ.get("CHAT_DATABASE", "chatbot_db")]
-chats = db[os.environ.get("CHAT_COLLECTION", "chats")]
-answers = db[os.environ.get("ANS_CHAT_COLLECTION", "answers")]
+collection = db[os.environ.get("ANS_CHAT_COLLECTION", "answers")]
 
 
 
