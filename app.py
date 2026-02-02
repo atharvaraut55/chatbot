@@ -8,7 +8,7 @@ from response import get_bot_response, get_bot_response_new
 app = Flask(__name__)
 
 # MongoDB connection
-client = MongoClient("mongodb+srv://atharvarautangular55_db_user:atharva.may5.5@cluster0.4cicvih.mongodb.net/?appName=Cluster0")
+client = MongoClient("mongodb://mongo:ZSEyqYqUMVoSfRloopDFYckVoIKpdpCc@mongodb.railway.internal:27017")
 
 # Database connection
 db = client["chatbot_db"]
