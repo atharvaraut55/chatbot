@@ -340,7 +340,7 @@
                 });
 
                 const data = await response.json();
-                return data.response || "No response from server.";
+                return data.reply || data.response || "No response from server.";
             } catch (error) {
                 return "❌ Server error. Please try again.";
             }
