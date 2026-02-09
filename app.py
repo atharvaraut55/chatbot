@@ -70,7 +70,9 @@ answers = db[os.environ.get("ANS_CHAT_COLLECTION", "answers")]
 
 
 
-CORS(app, resources={r"/chat": {"origins": "*"}})
+# CORS(app, resources={r"/chat": {"origins": "*"}})
+CORS(app, resources={r"/chat": {"origins": "http://localhost/wordpress/wordpress/"}})
+
 
 
 #---------------------------------------------------------------
