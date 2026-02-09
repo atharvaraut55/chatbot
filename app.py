@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import os
 from datetime import datetime
 from response import get_bot_response, get_bot_response_new
+from flask_cors import CORS
 
 
 app = Flask(__name__)
@@ -68,6 +69,8 @@ answers = db[os.environ.get("ANS_CHAT_COLLECTION", "answers")]
 #     return "Sorry, I didn't understand. Please type again."
 
 
+
+CORS(app, resources={r"/chat": {"origins": "*"}})
 
 
 #---------------------------------------------------------------
