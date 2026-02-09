@@ -71,7 +71,20 @@ answers = db[os.environ.get("ANS_CHAT_COLLECTION", "answers")]
 
 
 # CORS(app, resources={r"/chat": {"origins": "*"}})
-CORS(app, resources={r"/chat": {"origins": "http://localhost/wordpress/wordpress/chat"}})
+# CORS(app, resources={r"/chat": {"origins": "http://localhost/wordpress/wordpress/chat"}})
+from flask_cors import CORS
+
+CORS(app, resources={
+    r"/chat": {
+        "origins": [
+            "http://localhost",
+            "http://localhost:80",
+            "http://localhost:3000",
+            "http://127.0.0.1",
+            "http://localhost/wordpress/wordpress/"
+        ]
+    }
+})
 
 
 
